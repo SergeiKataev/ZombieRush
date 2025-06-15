@@ -15,23 +15,35 @@ public class MainPlayerController : MonoBehaviour
     private InputAction moveAction;
     private InputAction lookAction;
 
+    private Animator animator;
+    private bool isMoving; 
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        
+
+
         // Инициализация новой системы ввода
         playerInput = GetComponent<PlayerInput>();
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
+        
+        
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
         // Получаем ввод из новой системы
         movement = moveAction.ReadValue<Vector2>();
-        
+
         // Для мыши можно оставить старый способ или адаптировать
         mousePosition = gameCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+
+        isMoving = movement.magnitude > 0.1f;
+        
+        animator.SetBool("IsMoving", isMoving);
     }
 
     void FixedUpdate()
